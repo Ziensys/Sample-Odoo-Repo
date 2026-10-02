@@ -8,6 +8,8 @@
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
+        'views/sample_task_views.xml',
+        'views/sample_task_menus.xml',
     ],
     'application': True,
     'installable': True,

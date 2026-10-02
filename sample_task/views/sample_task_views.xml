@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sample_task_view_list" model="ir.ui.view">
+        <field name="name">sample.task.list</field>
+        <field name="model">sample.task</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'done'" decoration-danger="date_deadline and date_deadline &lt; current_date and state != 'done'">
+                <field name="priority" widget="priority" nolabel="1"/>
+                <field name="name"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="date_deadline"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'todo'"
+                       decoration-warning="state == 'in_progress'"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sample_task_view_form" model="ir.ui.view">
+        <field name="name">sample.task.form</field>
+        <field name="model">sample.task</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start" string="Start" type="object" class="btn-primary"
+                            invisible="state != 'todo'"/>
+                    <button name="action_done" string="Mark Done" type="object" class="btn-primary"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_reset" string="Reset to To Do" type="object"
+                            invisible="state == 'todo'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="priority" widget="priority"/>
+                            <field name="name" placeholder="Task title..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="date_deadline"/>
+                        </group>
+                        <group>
+                            <field name="estimated_hours" widget="float_time"/>
+                            <field name="spent_hours" widget="float_time"/>
+                            <field name="progress" widget="progressbar"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Details..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sample_task_view_search" model="ir.ui.view">
+        <field name="name">sample.task.search</field>
+        <field name="model">sample.task</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="user_id"/>
+                <filter name="my_tasks" string="My Tasks" domain="[('user_id', '=', uid)]"/>
+                <filter name="open" string="Open" domain="[('state', '!=', 'done')]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_user" string="Assigned To" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sample_task_action" model="ir.actions.act_window">
+        <field name="name">Tasks</field>
+        <field name="res_model">sample.task</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first task</p>
+        </field>
+    </record>
+</odoo>

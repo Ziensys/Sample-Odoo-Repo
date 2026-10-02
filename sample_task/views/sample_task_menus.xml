@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="sample_task_menu_root" name="Sample Tasks" sequence="90"/>
+    <menuitem id="sample_task_menu_tasks" name="Tasks" parent="sample_task_menu_root"
+              action="sample_task_action" sequence="10"/>
+</odoo>
